@@ -1,8 +1,6 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { PUBLIC_DOMAIN } from '$env/static/public';
-import { sql } from '$lib/server/db';
-import { checkVocabulary } from '$lib/utils';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
@@ -36,35 +34,6 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
             self_destruct = false,
             hashcash
         } = restData;
-
-        try {
-            const username = from.split('#')[0];
-            if (username) {
-                const users = await sql`
-                    SELECT iq FROM users WHERE username = ${username}
-                `;
-                const userIQ = users[0]?.iq;
-
-                if (content_type === 'text/plain' && body) {
-                    const { isValid, limit } = checkVocabulary(body, userIQ);
-                    if (!isValid) {
-                        return json({
-                            status: 'error',
-                            message: `Your message contains words longer than the allowed ${limit} characters for your IQ level. Please simplify your language.`
-                        }, { status: 400 });
-                    }
-                }
-            } else {
-                console.warn("Could not extract username from 'from' address:", from);
-            }
-        } catch (dbError) {
-            console.error("Error fetching user IQ or checking vocabulary:", dbError);
-
-            return json({
-                status: 'error',
-                message: 'Could not verify vocabulary requirements due to a server error.'
-            }, { status: 500 });
-        }
 
         const apiUrl = `https://${PUBLIC_DOMAIN}/sharp/api/send`;
 

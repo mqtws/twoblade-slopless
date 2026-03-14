@@ -103,29 +103,7 @@ export function validateUsername(username: string): boolean {
     }
 
     if (!USERNAME_REGEX.test(username)) {
-        return false
+        return false;
     }
     return true;
-}
-
-// THIS IS LINKED TO ../../SHARP/main.js
-// In order to make SHARP be usable without the website src, we use the same function there without importing it
-export function checkVocabulary(text: string, iq: number): { isValid: boolean; limit: number | null } {
-    let maxWordLength: number;
-
-    if (iq < 90) maxWordLength = 3;
-    else if (iq < 100) maxWordLength = 4;
-    else if (iq < 120) maxWordLength = 5;
-    else if (iq < 130) maxWordLength = 6;
-    else if (iq < 140) maxWordLength = 7;
-    else return { isValid: true, limit: null };
-
-    const words = text.split(/\s+/);
-    for (const word of words) {
-        const cleanedWord = word.replace(/[.,!?;:"']/g, '');
-        if (cleanedWord.length > maxWordLength) {
-            return { isValid: false, limit: maxWordLength };
-        }
-    }
-    return { isValid: true, limit: maxWordLength };
 }

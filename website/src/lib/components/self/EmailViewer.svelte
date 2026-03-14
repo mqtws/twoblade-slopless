@@ -31,7 +31,7 @@
 	import { HashcashPool } from '$lib/hashcash';
 	import { onDestroy } from 'svelte';
 	import log from '$lib/logger';
-	import { debounce, checkVocabulary } from '$lib/utils';
+	import { debounce } from '$lib/utils';
 	import { proxyUrl } from '$lib/utils/proxyUrl';
 	import { formatThreadDate } from '$lib/utils/format-date';
 	import { Turnstile } from 'svelte-turnstile';
@@ -186,29 +186,8 @@
 		isReplying = true;
 	}
 
-	const debouncedCheckReplyVocabulary = debounce(async () => {
-		if (htmlMode) {
-			vocabularyError = '';
-			return;
-		}
-
-		const userIQ = $USER_DATA?.iq ?? 100;
-		if (replyText) {
-			const { isValid, limit } = checkVocabulary(replyText, userIQ);
-			if (!isValid) {
-				vocabularyError = `Word length exceeds limit (${limit}) for IQ ${userIQ}.`;
-			} else {
-				vocabularyError = '';
-			}
-		} else {
-			vocabularyError = '';
-		}
-	}, 500);
-
 	$effect(() => {
-		if (isReplying && replyText) {
-			debouncedCheckReplyVocabulary();
-		} else {
+		if (!isReplying) {
 			vocabularyError = '';
 		}
 	});

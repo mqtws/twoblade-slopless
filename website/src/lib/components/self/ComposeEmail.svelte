@@ -18,8 +18,8 @@
 	import * as DropdownMenu from '../ui/dropdown-menu';
 	import { HashcashPool } from '$lib/hashcash';
 	import { onDestroy } from 'svelte';
-	import log from '$lib/logger';
-	import { debounce, checkVocabulary } from '$lib/utils';
+import log from '$lib/logger';
+import { debounce } from '$lib/utils';
 	import { PUBLIC_TURNSTILE_SITE_KEY } from '$env/static/public';
 	import { mode } from 'mode-watcher';
 	import { Turnstile } from 'svelte-turnstile';
@@ -144,17 +144,7 @@
 	}
 
 	const debouncedCheckVocabulary = debounce(async () => {
-		const userIQ = $USER_DATA?.iq ?? 100;
-		if (body) {
-			const { isValid, limit } = checkVocabulary(body, userIQ);
-			if (!isValid) {
-				vocabularyError = `Word length exceeds limit (${limit}) for IQ ${userIQ}.`;
-			} else {
-				vocabularyError = '';
-			}
-		} else {
-			vocabularyError = '';
-		}
+		vocabularyError = '';
 	}, 500);
 
 	async function fetchServerConfig() {
@@ -215,19 +205,6 @@
 		const contentType: EmailContentType = htmlMode ? 'text/html' : 'text/plain';
 		isStatusVisible = true;
 		statusColor = 'default';
-		vocabularyError = '';
-
-		const userIQ = $USER_DATA?.iq ?? 100;
-		if (body) {
-			const { isValid, limit } = checkVocabulary(body, userIQ);
-			if (!isValid) {
-				status = `Your message contains words longer than the allowed ${limit} characters for your IQ level (${userIQ}). Please simplify.`;
-				statusColor = 'destructive';
-				isRetrying = false;
-				return;
-			}
-		}
-
 		vocabularyError = '';
 
 		try {

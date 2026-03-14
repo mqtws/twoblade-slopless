@@ -6,8 +6,7 @@
 	import { toast } from 'svelte-sonner';
 	import { TestTubeDiagonal } from 'lucide-svelte';
 	import * as Tooltip from '$lib/components/ui/tooltip';
-	import { USER_DATA } from '$lib/stores/user';
-	import { checkVocabulary } from '$lib/utils';
+import { USER_DATA } from '$lib/stores/user';
 	import { onDestroy } from 'svelte';
 	import { Progress } from '$lib/components/ui/progress';
 	import { Download, Trash2, LogOut } from 'lucide-svelte';
@@ -74,24 +73,6 @@
 			toast.error('Failed to update notification settings');
 		}
 	}
-	let vocabularyLimit = $derived(!$USER_DATA?.iq ? null : checkVocabulary('', $USER_DATA.iq).limit);
-
-	let vocabularyDescription = $derived(
-		vocabularyLimit === null
-			? 'No word length restrictions'
-			: `Limited to ${vocabularyLimit}-letter words`
-	);
-
-	let vocabularyInfo = $derived(
-		!$USER_DATA?.iq
-			? null
-			: {
-					iq: $USER_DATA.iq,
-					limit: vocabularyLimit,
-					description: vocabularyDescription
-				}
-	);
-
 	async function requestDataExport() {
 		const res = await fetch('/api/settings/data-export', {
 			method: 'POST'

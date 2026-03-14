@@ -597,26 +597,6 @@ async function calculateSpamScore(header, resource) {
     }
 }
 
-function checkVocabulary(text, iq) {
-    let maxWordLength;
-
-    if (iq < 90) maxWordLength = 3;
-    else if (iq < 100) maxWordLength = 4;
-    else if (iq < 120) maxWordLength = 5;
-    else if (iq < 130) maxWordLength = 6;
-    else if (iq < 140) maxWordLength = 7;
-    else return { isValid: true, limit: null };
-
-    const words = text.split(/\s+/);
-    for (const word of words) {
-        const cleanedWord = word.replace(/[.,!?;:"']/g, '');
-        if (cleanedWord.length > maxWordLength) {
-            return { isValid: false, limit: maxWordLength };
-        }
-    }
-    return { isValid: true, limit: maxWordLength };
-}
-
 app.post('/send', validateAuthToken, async (req, res) => {
     let logEntry;
     let emailId;
@@ -675,18 +655,6 @@ app.post('/send', validateAuthToken, async (req, res) => {
                 success: false,
                 message: `This server does not relay mail for the domain ${fp.domain}`
             });
-        }
-
-        if (emailData.content_type === 'text/plain' && emailData.body) {
-            const users = await sql`SELECT iq FROM users WHERE username = ${req.user.username}`;
-            const userIQ = users[0]?.iq;
-            const { isValid, limit } = checkVocabulary(emailData.body, userIQ);
-            if (!isValid) {
-                return res.status(400).json({
-                    success: false,
-                    message: `Message contains words longer than the allowed ${limit} characters for your IQ level (${userIQ}). Please simplify.`
-                });
-            }
         }
 
         if (hashcash && spamScore < HASHCASH_THRESHOLDS.REJECT) {

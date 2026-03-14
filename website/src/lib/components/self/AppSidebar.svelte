@@ -15,7 +15,6 @@
 		ArrowUp,
 		PenSquare,
 		Settings,
-		MessageCircle,
 		ShieldAlert,
 		FileText
 	} from 'lucide-svelte';
@@ -31,7 +30,6 @@
 	const data = {
 		navMain: [
 			{ title: 'Inbox', url: '/inbox', icon: Inbox },
-			{ title: 'Chat', url: '/chat', icon: MessageCircle },
 			{ title: 'Starred', url: '/starred', icon: Star },
 			{ title: 'Snoozed', url: '/snoozed', icon: Clock },
 			{ title: 'Sent', url: '/sent', icon: Send },

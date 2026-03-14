@@ -40,7 +40,6 @@
 		page.url.pathname.startsWith('/(auth)') || page.url.pathname.startsWith('/auth')
 	);
 	const isEmailRoute = $derived(page.route.id === '/inbox');
-	const isChatRoute = $derived(page.route.id === '/chat');
 
 	const performSearch = async (query: string) => {
 		if (!query.trim()) {
@@ -200,8 +199,7 @@
 	$effect(() => {
 		if (!$USER_DATA) return;
 		const route = page.route.id;
-		if (route === '/chat') $currentTab = 'Chat';
-		else if (route === '/starred') $currentTab = 'Starred';
+		if (route === '/starred') $currentTab = 'Starred';
 		else if (route === '/snoozed') $currentTab = 'Snoozed';
 		else if (route === '/sent') $currentTab = 'Sent';
 		else if (route === '/drafts') $currentTab = 'Drafts';
@@ -264,17 +262,7 @@
 								</div>
 							{/if}
 
-							{#if isChatRoute}
-								<div class="flex items-center gap-2">
-									<span class="relative flex h-3 w-3">
-										<span
-											class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75"
-										></span>
-										<span class="relative inline-flex h-3 w-3 rounded-full bg-green-500"></span>
-									</span>
-									<span class="text-muted-foreground text-sm">{$activeUsers} online</span>
-								</div>
-							{/if}
+							<!-- chat header removed -->
 						</div>
 					</header>
 				{/if}
