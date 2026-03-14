@@ -12,7 +12,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         if (payload) {
             try {
                 const users = await sql`
-                    SELECT id, username, domain, is_banned, created_at, iq, is_admin 
+                    SELECT id, username, domain, is_banned, created_at, is_admin 
                     FROM users 
                     WHERE id = ${payload.userId} AND deleted_at IS NULL
                 `;
@@ -25,7 +25,6 @@ export const handle: Handle = async ({ event, resolve }) => {
                         domain: dbUser.domain || PUBLIC_DOMAIN,
                         is_banned: dbUser.is_banned,
                         created_at: dbUser.created_at.toISOString(),
-                        iq: dbUser.iq,
                         is_admin: dbUser.is_admin,
                         code: payload.code
                     };

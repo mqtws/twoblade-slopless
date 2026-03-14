@@ -8,7 +8,6 @@ export interface UserSessionData {
     domain: string;
     is_banned: boolean;
     created_at: string;
-    iq: number;
     is_admin: boolean;
 }
 
@@ -16,7 +15,6 @@ export type BannedUser = {
     id: number;
     username: string;
     domain: string;
-    iq: number;
     created_at: Date;
 };
 

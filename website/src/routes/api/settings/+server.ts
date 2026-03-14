@@ -53,8 +53,7 @@ export async function DELETE({ locals }: RequestEvent) {
         await sql`
             UPDATE users 
             SET deleted_at = NOW(),
-                password_hash = 'DELETED_ACCOUNT', 
-                iq = NULL
+                password_hash = 'DELETED_ACCOUNT'
             WHERE id = ${userId} AND deleted_at IS NULL
         `;
     });

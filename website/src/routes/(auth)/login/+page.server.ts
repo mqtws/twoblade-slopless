@@ -27,7 +27,7 @@ export const actions: Actions = {
 
         try {
             const users = await sql`
-                SELECT id, username, password_hash, is_banned, iq
+                SELECT id, username, password_hash, is_banned
                 FROM users
                 WHERE username = ${username}
             `;

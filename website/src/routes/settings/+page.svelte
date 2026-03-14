@@ -191,18 +191,6 @@ import { USER_DATA } from '$lib/stores/user';
 							{$USER_DATA.username}#{$USER_DATA.domain}
 						</Label>
 					</div>
-
-					{#if vocabularyInfo}
-						<div class="flex items-center justify-between">
-							<div class="mt-6 flex flex-col gap-1">
-								<Label class="font-medium">Intelligence Quotient</Label>
-								<Label class="text-muted-foreground text-sm">{vocabularyInfo.description}</Label>
-							</div>
-							<Label class="text-primary bg-muted rounded px-2 py-1">
-								{vocabularyInfo.iq} IQ
-							</Label>
-						</div>
-					{/if}
 				</Card.Content>
 			</Card.Root>
 

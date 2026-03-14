@@ -130,21 +130,6 @@
 				);
 				threadEmails = sortedEmails;
 
-				// FETCH IQ
-				const uniqueAddresses = new Set(sortedEmails.map((e: Email) => e.from_address));
-				const newIQs = new Map<string, number | null>();
-
-				await Promise.all(
-					Array.from(uniqueAddresses as Set<string>).map(async (address: string) => {
-						const iq = await getUserIQ(address);
-						newIQs.set(address, iq);
-					})
-				);
-
-				emailIQs = newIQs;
-
-				// END FETCH IQ
-
 				const initialEmailIndex = sortedEmails.findIndex((e: Email) => e.id === email.id);
 
 				const newExpandedSet = new Set<string>();
@@ -427,22 +412,6 @@
 		attachments = files;
 	}
 
-	async function getUserIQ(emailAddress: string): Promise<number | null> {
-		try {
-			const username = emailAddress.split('#')[0];
-			const response = await fetch(`/api/users/${encodeURIComponent(username)}/iq`);
-			if (response.ok) {
-				const data = await response.json();
-				return data.iq;
-			}
-		} catch (error) {
-			console.error('Failed to fetch user IQ:', error);
-		}
-		return null;
-	}
-
-	let emailIQs = $state(new Map<string, number | null>());
-
 	const hashcashPool = new HashcashPool();
 	let serverConfig = $state<{ hashcash: { minBits: number; recommendedBits: number } } | null>(
 		null
@@ -532,11 +501,6 @@
 									>
 								</div>
 								<span class="font-medium">{threadEmail.from_address}</span>
-								{#if emailIQs.has(threadEmail.from_address) && emailIQs.get(threadEmail.from_address) !== null}
-									<span class="bg-primary/10 text-primary rounded px-2 py-0.5 text-xs font-medium">
-										{emailIQs.get(threadEmail.from_address)} IQ
-									</span>
-								{/if}
 								<span class="text-muted-foreground text-sm">
 									{formatThreadDate(threadEmail.sent_at)}
 								</span>

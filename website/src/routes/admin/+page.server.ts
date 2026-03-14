@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ parent }) => {
     }
 
     const bannedUsers: BannedUser[] = await sql`
-        SELECT id, username, domain, iq, created_at 
+        SELECT id, username, domain, created_at 
         FROM users 
         WHERE is_banned = true
         ORDER BY created_at DESC

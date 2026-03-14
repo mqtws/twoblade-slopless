@@ -28,17 +28,16 @@ CREATE TYPE email_classification AS ENUM (
 
 CREATE TABLE
     users (
-        id SERIAL PRIMARY KEY,
-        username VARCHAR(255) NOT NULL UNIQUE,
-        domain VARCHAR(255) NOT NULL,
-        password_hash VARCHAR(255) NOT NULL,
-        iq INTEGER,
-        is_banned BOOLEAN DEFAULT FALSE,
-        is_admin BOOLEAN DEFAULT FALSE,
-        ip VARCHAR(48),
-        user_agent TEXT,
-        deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    domain VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    is_banned BOOLEAN DEFAULT FALSE,
+    is_admin BOOLEAN DEFAULT FALSE,
+    ip VARCHAR(48),
+    user_agent TEXT,
+    deleted_at TIMESTAMP WITH TIME ZONE DEFAULT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     );
 
 CREATE INDEX idx_users_username ON users (username);

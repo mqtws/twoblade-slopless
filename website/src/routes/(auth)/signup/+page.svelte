@@ -1,30 +1,16 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import type { ActionData } from './$types';
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import { Label } from '$lib/components/ui/label';
-	import { Card, CardContent } from '$lib/components/ui/card';
-	import { Alert, AlertDescription, AlertTitle } from '$lib/components/ui/alert';
-	import { AlertCircle, Check } from 'lucide-svelte';
-	import { Progress } from '$lib/components/ui/progress';
-	import DomainInput from '$lib/components/self/DomainInput.svelte';
-	import { debounce, validateUsername } from '$lib/utils';
-	import { PUBLIC_DOMAIN } from '$env/static/public';
-	import { page } from '$app/stores';
-
-	type Question = {
-		question: string;
-		options: string[];
-		imageUrls?: string[];
-	};
-
-	type IQResponse = {
-		completed: boolean;
-		nextSection?: 'brainrot' | 'math' | 'literacy';
-		score?: number;
-		questionIndex: number;
-	};
+import type { ActionData } from './$types';
+import { Button } from '$lib/components/ui/button';
+import { Input } from '$lib/components/ui/input';
+import { Label } from '$lib/components/ui/label';
+import { Card, CardContent } from '$lib/components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '$lib/components/ui/alert';
+import { AlertCircle } from 'lucide-svelte';
+import DomainInput from '$lib/components/self/DomainInput.svelte';
+import { debounce, validateUsername } from '$lib/utils';
+import { PUBLIC_DOMAIN } from '$env/static/public';
+import { page } from '$app/stores';
 
 	let { form }: { form: ActionData } = $props();
 
@@ -32,20 +18,8 @@
 	let username = $state(initialUsername);
 	let password = $state('');
 	let confirmPassword = $state('');
-	let isSubmitting = $state(false);
-	let clientError = $state('');
-	let showTest = $state(false);
-	let currentQuestion = $state<Question | null>(null);
-	let sessionId = $state('');
-	let testCompleted = $state(false);
-	let currentTestSection = $state<'brainrot' | 'math' | 'literacy' | ''>('');
-	let formValidated = $state(false);
-	let iqScore = $state(0);
-
-	let sessionData = $state<{
-		questionIndex: number;
-		section: string;
-	} | null>(null);
+let isSubmitting = $state(false);
+let clientError = $state('');
 
 	let usernameError = $state('');
 	let usernamePending = $state(false);
@@ -112,85 +86,14 @@
 		isSubmitting = true;
 	}
 
-	async function checkFormAndStartTest() {
-		if (!formValidated) {
-			if (!(await checkUsername()) || !validateForm()) return;
-
-			formValidated = true;
-			initIQTest();
-		}
-	}
-
-	async function initIQTest() {
-		const response = await fetch('/api/iq', {
-			method: 'POST'
-		});
-		const data = await response.json();
-		sessionId = data.sessionId;
-		showTest = true;
-		currentTestSection = 'brainrot';
-		await loadNextQuestion();
-	}
-
-	async function loadNextQuestion() {
-		const response = await fetch(`/api/iq?sessionId=${sessionId}`);
-		const data = await response.json();
-		currentQuestion = data.question as Question;
-	}
-
-	async function handleAnswer(answerIndex: number) {
-		const response = await fetch('/api/iq', {
-			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify({ sessionId, answer: answerIndex })
-		});
-		const data = (await response.json()) as IQResponse;
-
-		if (data.completed) {
-			testCompleted = true;
-			iqScore = data.score ?? 0;
-		} else {
-			currentTestSection = data.nextSection || '';
-			sessionData = {
-				questionIndex: data.questionIndex,
-				section: data.nextSection || ''
-			};
-			await loadNextQuestion();
-		}
-	}
-
 	$effect(() => {
 		if (form) {
 			isSubmitting = false;
 			password = '';
 			confirmPassword = '';
-			if (form.success) {
-				username = '';
-				sessionId = '';
-				iqScore = 0;
-				showTest = false;
-				testCompleted = false;
-				formValidated = false;
-				currentQuestion = null;
-				sessionData = null;
-			}
+		if (form.success) {
+			username = '';
 		}
-	});
-
-	$effect(() => {
-		if (
-			username &&
-			password &&
-			confirmPassword &&
-			password === confirmPassword &&
-			password.length >= 8
-		) {
-			checkFormAndStartTest();
-		} else {
-			formValidated = false;
-			showTest = false;
 		}
 	});
 
@@ -203,37 +106,11 @@
 		}
 	});
 
-	let cardVisible = $state(true);
-
-	$effect(() => {
-		if (showTest) {
-			cardVisible = false;
-			setTimeout(() => {
-				cardVisible = true;
-			}, 50);
-		}
-	});
-
-	function scrambleText(text: string) {
-		return text
-			.split('')
-			.map((char) => {
-				if (char === ' ') return ' ';
-				return `<span class="relative">${char}<span class="select-none absolute left-0 opacity-0">${String.fromCharCode(
-					8203
-				)}${String.fromCharCode(Math.random() * 1000 + 8000)}</span></span>`;
-			})
-			.join('');
-	}
+let cardVisible = $state(true);
 </script>
 
 <div class="flex min-h-screen items-center justify-center p-4">
-	<Card
-		class={`${cardVisible ? 'opacity-100' : 'opacity-0'} ${
-			showTest ? 'w-[95vw] max-w-[850px]' : 'w-[95vw] max-w-[400px]'
-		} min-w-[320px]`}
-		style="transition: all 0.3s ease-in-out;"
-	>
+	<Card class={`${cardVisible ? 'opacity-100' : 'opacity-0'} w-[95vw] max-w-[400px] min-w-[320px]`}>
 		<CardContent
 			class="scrollbar-thin scrollbar-thumb-primary/10 hover:scrollbar-thumb-primary/20 max-h-[85vh] overflow-y-auto overflow-x-hidden p-4 md:p-6"
 		>
@@ -250,20 +127,7 @@
 						<p class="text-muted-foreground text-sm">Enter your details to get started.</p>
 					</div>
 
-					<form
-						method="POST"
-						use:enhance={() => {
-							handleSubmit();
-							return async ({ result, update }) => {
-								if (result.type === 'success') {
-									await update();
-								} else {
-									isSubmitting = false;
-									await update();
-								}
-							};
-						}}
-					>
+					<form method="POST" use:enhance>
 						{#if form?.success}
 							<Alert
 								variant="default"
@@ -287,12 +151,6 @@
 						{/if}
 
 						<div class="grid gap-4">
-							<!-- Hidden inputs for IQ data -->
-							{#if testCompleted}
-								<input type="hidden" name="sessionId" value={sessionId} />
-								<input type="hidden" name="iqScore" value={iqScore} />
-							{/if}
-
 							<div class="grid gap-2">
 								<Label for="username">Username</Label>
 								<DomainInput
@@ -341,7 +199,7 @@
 								/>
 							</div>
 
-							<Button type="submit" class="w-full" disabled={isSubmitting || !testCompleted}>
+							<Button type="submit" class="w-full" disabled={isSubmitting}>
 								{isSubmitting ? 'Creating Account...' : 'Create Account'}
 							</Button>
 							<div class="text-center text-xs">
@@ -358,103 +216,7 @@
 					</form>
 				</div>
 
-				{#if showTest}
-					<!-- IQ Test section with flexible width on desktop -->
-					<div
-						class="animate-slide-up md:animate-fade-in w-full pl-0 md:w-[400px] md:border-l md:pl-8"
-					>
-						<div class="mb-4 flex flex-col space-y-1">
-							<div
-								role="heading"
-								aria-level={3}
-								class="text-xl font-semibold leading-none tracking-tight md:text-2xl"
-							>
-								IQ Test
-							</div>
-							<p class="text-muted-foreground mb-2 text-sm">
-								{#if testCompleted}
-									Test completed successfully!
-								{:else}
-									<span class="capitalize">{currentTestSection}</span> Section
-								{/if}
-							</p>
-
-							{#if !testCompleted}
-								<div class="mt-1 flex items-center gap-1">
-									<Progress
-										value={currentTestSection === 'brainrot'
-											? currentSectionProgress
-											: currentTestSection === 'math' || currentTestSection === 'literacy'
-												? 100
-												: 0}
-										class="h-2"
-									/>
-
-									<Progress
-										value={currentTestSection === 'math'
-											? currentSectionProgress
-											: currentTestSection === 'literacy'
-												? 100
-												: 0}
-										class="h-2"
-									/>
-
-									<Progress
-										value={currentTestSection === 'literacy' ? currentSectionProgress : 0}
-										class="h-2"
-									/>
-								</div>
-							{/if}
-						</div>
-
-						{#if testCompleted}
-							<div class="bg-primary/5 rounded-lg p-4 text-center">
-								<Check class="text-primary mx-auto h-8 w-8 md:h-12 md:w-12" />
-								<div class="mt-2 text-lg font-medium md:text-xl">Completed</div>
-								<p class="text-muted-foreground mt-1">
-									IQ: <span class="text-foreground text-lg font-bold md:text-xl">{iqScore}</span>
-								</p>
-							</div>
-						{:else if currentQuestion}
-							<div class="space-y-3">
-								<div class="select-none text-base font-medium md:text-lg">
-									{@html scrambleText(currentQuestion.question)}
-								</div>
-
-								{#if currentQuestion?.imageUrls}
-									<div class="grid max-h-[40vh] grid-cols-2 gap-2 md:max-h-none md:gap-4">
-										{#each currentQuestion.imageUrls as imageUrl, i}
-											<button
-												type="button"
-												class="border-muted hover:border-primary relative aspect-square cursor-pointer overflow-hidden rounded-lg border-2 p-0 transition-colors"
-												onclick={() => handleAnswer(i)}
-												aria-label={`Select option ${i + 1}`}
-											>
-												<img
-													src={imageUrl}
-													alt={`Option ${i + 1}`}
-													class="h-full w-full object-cover"
-												/>
-											</button>
-										{/each}
-									</div>
-								{:else}
-									<div class="grid gap-2">
-										{#each currentQuestion.options as option, i}
-											<Button
-												variant="outline"
-												class="h-auto min-h-[2.5rem] w-full select-none justify-start whitespace-normal py-1 text-left text-sm md:py-2 md:text-base"
-												onclick={() => handleAnswer(i)}
-											>
-												{option}
-											</Button>
-										{/each}
-									</div>
-								{/if}
-							</div>
-						{/if}
-					</div>
-				{/if}
+				<!-- IQ test removed -->
 			</div>
 		</CardContent>
 	</Card>

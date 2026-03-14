@@ -39,7 +39,7 @@
 			id: 'anti-spam',
 			icon: 'Shield',
 			title: 'Smart Anti-Spam',
-			description: 'Hashcash and IQ-based vocabulary controls, paired with Outpoot Nullmark™'
+			description: 'Hashcash-based spam filtering, paired with Outpoot Nullmark™'
 		},
 		{
 			id: 'scheduling',
@@ -64,12 +64,6 @@
 			icon: 'Users',
 			title: 'Contacts',
 			description: 'Manage your network effectively'
-		},
-		{
-			id: 'chat',
-			icon: 'MessageCircle',
-			title: 'Real-time Chat',
-			description: 'Instant messaging between Twoblade users, for the funnies'
 		},
 		{
 			id: 'classification',

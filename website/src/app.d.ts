@@ -7,7 +7,6 @@ type UserSessionData = {
 	domain: string;
 	is_banned: boolean;
 	created_at: string;
-	iq: number;
 	is_admin: boolean;
 	code: string;
 } | null;

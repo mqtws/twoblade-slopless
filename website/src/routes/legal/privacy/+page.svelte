@@ -61,7 +61,6 @@
 						<ul class="ml-6 list-disc space-y-1">
 							<li>Username and Domain (forming your unique Twoblade address)</li>
 							<li>Hashed Password (we never store your plain text password)</li>
-							<li>Intelligence Quotient (IQ) score (used for vocabulary features)</li>
 							<li>Account status flags (e.g., admin, banned)</li>
 							<li>Creation timestamp</li>
 						</ul>
@@ -127,7 +126,7 @@
 					<li><strong>Providing Email Services:</strong> Delivering emails locally and to remote SHARP servers, storing emails and attachments, managing contacts and drafts.</li>
 					<li><strong>Security and Authentication:</strong> Verifying your identity, protecting against unauthorized access, detecting and preventing spam using Hashcash analysis and Outpoot Nullmark™ technology.</li>
 					<li><strong>Service Improvement:</strong> Analyzing usage patterns (in aggregate, non-identifiable ways) to enhance features and performance.</li>
-					<li><strong>Feature Provision:</strong> Enabling features like scheduled sending, email expiration, self-destruct, snoozing, notifications, and vocabulary checks based on IQ.</li>
+					<li><strong>Feature Provision:</strong> Enabling features like scheduled sending, email expiration, self-destruct, snoozing, notifications, and related account features.</li>
 					<li><strong>Email Classification:</strong> Automatically categorizing emails based on keywords and structure (see Section 4).</li>
 					<li><strong>Enforcing Limits:</strong> Managing storage quotas and attachment size limits.</li>
 					<li><strong>Troubleshooting:</strong> Diagnosing and resolving technical issues.</li>

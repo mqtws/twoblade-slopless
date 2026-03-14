@@ -60,7 +60,6 @@
 					<li>Automatic email classification (e.g., Promotions, Updates).</li>
 					<li>Spam mitigation using Hashcash proof-of-work.</li>
 					<li>Optional desktop notifications.</li>
-					<li>Vocabulary limitations based on user-provided IQ score.</li>
 					<li>Data export and account deletion functionalities.</li>
 				</ul>
 			</section>
@@ -70,11 +69,7 @@
 				<ul class="ml-6 list-disc space-y-1">
 					<li>
 						<strong>Registration:</strong> You must provide accurate information, including a unique
-						username, domain, and complete an IQ assessment. You are responsible for maintaining the confidentiality of your password.
-					</li>
-					<li>
-						<strong>IQ Assessment:</strong> An IQ assessment is mandatory during registration. This score determines
-						your vocabulary restrictions. The assessment must be completed truthfully and accurately.
+						username and password. You are responsible for maintaining the confidentiality of your password.
 					</li>
 					<li>
 						<strong>Account Security:</strong> You are responsible for all activities that occur under
@@ -96,7 +91,7 @@
 					<li>Transmit viruses, malware, or other harmful code.</li>
 					<li>Interfere with or disrupt the Service or servers or networks connected to the Service.</li>
 					<li>Attempt to exceed storage or attachment size limits.</li>
-					<li>Circumvent vocabulary restrictions if applicable based on your provided IQ.</li>
+					<li>Attempt to bypass technical or security measures designed to protect the Service.</li>
 				</ul>
 				<p>
 					You are solely responsible for the content you send and receive through the Service and for
